@@ -1,0 +1,9 @@
+model Post {
+  id          String   @id @default(uuid())  // Primary key, auto-incrementing
+  title       String                                // Title of the post
+  content     String                                // Content of the post
+  createdAt   DateTime @default(now())             // Timestamp for when the post was created
+  updatedAt DateTime @updatedAt                  // Timestamp for when the post was last updated
+  author      User @relation(fields: [authorId], references: [id]) // Relationship with User model (example)
+  authorId    String                                // Foreign key for User model (example)
+}
