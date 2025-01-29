@@ -58,28 +58,29 @@ export class AuthService {
     return token;
   }
 
-  async authenticateUser(dto: loginDto):Promise<any> {
-    const user = await this.validateUser(dto);
+  // async authenticateUser(dto: loginDto):Promise<any> {
+  //   const user = await this.validateUser(dto);
 
-    if (!user) {
-      throw new BadRequestException("Invalid login credentials");
-    }
+  //   if (!user) {
+  //     throw new BadRequestException("Invalid login credentials");
+  //   }
 
-    const accessToken = await this.signin(user);
+  //   const accessToken = await this.signin(user);
 
-    console.log('AccessToken: ', accessToken);
-    console.log('User: ', user);
+  //   console.log('AccessToken: ', accessToken);
+  //   console.log('User: ', user);
 
-    //@ts-ignore
-    delete user.password
 
-    return {
-      user,
-      accessToken,
-    };
-  }
+  //   //@ts-ignore
+  //   delete user.password
 
-  async signup(dto: signupDto): Promise<any> {
+  //   return {
+  //     user,
+  //     accessToken,
+  //   };
+  // }
+
+  async signup(dto: signupDto): Promise<Omit<User, 'password'>> {
     console.log(dto);
     try {
       //generate password hash
@@ -94,10 +95,10 @@ export class AuthService {
         },
       });
 
-      return {
-        ...newUser,
-        password: undefined,
-      };
+      //@ts-ignore
+      delete newUser.password
+
+      return newUser
     } catch (error) {
       if (
         error instanceof PrismaClientKnownRequestError &&
