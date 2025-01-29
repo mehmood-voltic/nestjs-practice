@@ -1,8 +1,10 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AuthService } from "./auth.service";
 import { loginDto, signupDto } from "./dto";
-import { AuthGuard } from "./guards/auth.guards";
+import { PassportLocalGuard } from "./guards/auth.guards";
+import { PassportJwtGuard } from "./guards/jwt.guards";
+import { AuthRequest } from "src/global/interfaces";
 
 @Controller("auth")
 export class AuthController {
@@ -15,14 +17,8 @@ export class AuthController {
   }
 
   @Post("signin")
-  async signin(@Body() data: loginDto) {
-    data.email = data.email.toLowerCase();
-    return await this.authService.authenticateUser(data);
+  @UseGuards(PassportLocalGuard)
+  async signin(@Req() req:AuthRequest) {
+    return await this.authService.signin(req.user);
   }
-  
-  // @UseGuards(AuthGuard)
-  // @Get('posts')
-  // async getPosts() {
-  //   return await this.prisma.post.findMany();
-  // }
 }
