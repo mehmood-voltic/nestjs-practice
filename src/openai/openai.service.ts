@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { OpenAI } from "openai";
+import { OpenAI, OpenAIError } from "openai";
 
 @Injectable()
 export class OpenaiService extends OpenAI {
@@ -11,11 +11,18 @@ export class OpenaiService extends OpenAI {
   }
 
   async getCompletion(prompt: string) {
+    // try {
     const response = await this.chat.completions.create({
+      modalities: ["text"],
       model: "gpt-4o-mini",
       messages: [{ role: "user", content: prompt }],
     });
-
     return response.choices[0].message.content;
+    // } catch (error) {
+    //   if (error instanceof OpenAIError) {
+    //     console.log(error);
+    //     throw new InternalServerErrorException(error.message);
+    //   }
+    // }
   }
 }
