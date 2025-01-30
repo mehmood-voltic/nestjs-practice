@@ -2,6 +2,7 @@ import { Injectable, NotImplementedException, UnauthorizedException } from "@nes
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-local";
 import { AuthService } from "../auth.service";
+import { User } from "@prisma/client";
 
 
 @Injectable()
@@ -14,12 +15,8 @@ export class LocalStrategy extends PassportStrategy(Strategy){
     }
 
     //this default validate funciton is abstraction inside Passport Strategy class. If we return user, it appends the user to the request object automatically
-    async validate(email: string, password: string): Promise<any>{
-        const user = await this.authService.validateUser({email, password})
-        if(!user){
-            throw new UnauthorizedException('User does not exist')
-        }
-        return user
+    async validate(email: string, password: string): Promise<User>{
+        return this.authService.validateUser({email, password});
     }
     
 }

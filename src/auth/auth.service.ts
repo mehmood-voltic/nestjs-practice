@@ -30,11 +30,11 @@ export class AuthService {
     return await bcrypt.compare(password, hashedPassword);
   }
 
-  async validateUser(dto: loginDto): Promise<User | null> {
+  async validateUser(dto: loginDto): Promise<User> {
     const user = await this.usersService.findUserByEmail(dto.email);
 
     //check if the user exists
-    if (!user) return null;
+    if (!user) throw new BadRequestException("User does not exist");
 
     //validate password
     const isValidPassword = await this.validatePassword(
@@ -42,8 +42,10 @@ export class AuthService {
       user.password,
     );
 
-    if (!isValidPassword) return null;
+    //check whether the password is valid
+    if (!isValidPassword) throw new BadRequestException("Invalid password");
 
+    //user is successsfully validated, now return it
     return user;
   }
 
@@ -70,7 +72,6 @@ export class AuthService {
   //   console.log('AccessToken: ', accessToken);
   //   console.log('User: ', user);
 
-
   //   //@ts-ignore
   //   delete user.password
 
@@ -80,7 +81,7 @@ export class AuthService {
   //   };
   // }
 
-  async signup(dto: signupDto): Promise<Omit<User, 'password'>> {
+  async signup(dto: signupDto): Promise<Omit<User, "password">> {
     console.log(dto);
     try {
       //generate password hash
@@ -96,9 +97,9 @@ export class AuthService {
       });
 
       //@ts-ignore
-      delete newUser.password
+      delete newUser.password;
 
-      return newUser
+      return newUser;
     } catch (error) {
       if (
         error instanceof PrismaClientKnownRequestError &&
@@ -109,5 +110,4 @@ export class AuthService {
       throw new InternalServerErrorException("Something went wrong");
     }
   }
-
 }
