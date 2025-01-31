@@ -6,10 +6,10 @@ import {
 import { PrismaService } from "src/prisma/prisma.service";
 import { loginDto, signupDto } from "./dto";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import * as bcrypt from "bcryptjs";
 import { UsersService } from "src/users/users.service";
 import { User } from "@prisma/client";
 import { JwtService } from "@nestjs/jwt";
+import { PasswordService } from "./password.service";
 
 @Injectable()
 export class AuthService {
@@ -17,18 +17,8 @@ export class AuthService {
     private prisma: PrismaService,
     private usersService: UsersService,
     private jwtService: JwtService,
+    private passwordService: PasswordService,
   ) {}
-
-  async hashPassword(password: string): Promise<string> {
-    return await bcrypt.hash(password, 10);
-  }
-
-  async validatePassword(
-    password: string,
-    hashedPassword: string,
-  ): Promise<boolean> {
-    return await bcrypt.compare(password, hashedPassword);
-  }
 
   async validateUser(dto: loginDto): Promise<User> {
     const user = await this.usersService.findUserByEmail(dto.email);
@@ -37,7 +27,7 @@ export class AuthService {
     if (!user) throw new BadRequestException("User does not exist");
 
     //validate password
-    const isValidPassword = await this.validatePassword(
+    const isValidPassword = await this.passwordService.validatePassword(
       dto.password,
       user.password,
     );
@@ -85,7 +75,9 @@ export class AuthService {
     console.log(dto);
     try {
       //generate password hash
-      const hashedPassword = await this.hashPassword(dto.password);
+      const hashedPassword = await this.passwordService.hashPassword(
+        dto.password,
+      );
       //create user
       const newUser = await this.prisma.user.create({
         data: {
