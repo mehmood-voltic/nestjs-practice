@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { AuthController } from "./auth/auth.controller";
+import { AuthController } from "./auth/controllers/auth.controller";
 import { AuthModule } from "./auth/auth.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { UsersModule } from "./users/users.module";
@@ -8,6 +8,5 @@ import { OpenaiModule } from "./openai/openai.module";
 
 @Module({
   imports: [AuthModule, PrismaModule, UsersModule, PostsModule, OpenaiModule],
-  // controllers: [AuthController],
 })
 export class AppModule {}
