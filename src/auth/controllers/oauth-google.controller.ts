@@ -21,6 +21,6 @@ export class OauthGoogleController {
   @Get("callback")
   @UseGuards(OAuthGoogleGuard)
   async callback() {
-    throw new NotImplementedException("Not implemented");
+    return "You are now authenticated with your google account";
   }
 }

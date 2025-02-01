@@ -4,12 +4,12 @@ import {
   InternalServerErrorException,
 } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { loginDto, signupDto } from "./dto";
+import { loginDto, signupDto } from "../dto";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { UsersService } from "src/users/users.service";
 import { User } from "@prisma/client";
 import { JwtService } from "@nestjs/jwt";
-import { PasswordService } from "./password.service";
+import { PasswordService } from "../password.service";
 
 @Injectable()
 export class AuthService {

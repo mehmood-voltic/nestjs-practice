@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
-import { AuthService } from "../auth.service";
+import { AuthService } from "../services/auth.service";
 import { loginDto, signupDto } from "../dto";
 import { PassportLocalGuard } from "src/auth/guards/local.guard";
 import { AuthRequest } from "src/global/interfaces";

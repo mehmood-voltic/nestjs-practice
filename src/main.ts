@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import * as session from "express-session";
 import * as passport from "passport";
 import { CipherKey } from "crypto";
+import { SessionProvider } from "./auth/services/session.provider.service";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -31,23 +32,25 @@ async function bootstrap() {
   app.enableCors();
 
   //enable session authication using express session
-  app.use(
-    session({
-      secret: process.env.SESSION_SECRET as CipherKey,
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        secure: process.env.NEST_ENV === "production",
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24,
-      },
-    }),
-  );
+  // app.use(
+  //   session({
+  //     secret: process.env.SESSION_SECRET as CipherKey,
+  //     resave: false,
+  //     saveUninitialized: false,
+  //     cookie: {
+  //       secure: process.env.NEST_ENV === "production",
+  //       httpOnly: true,
+  //       maxAge: 1000 * 60 * 60 * 24,
+  //     },
+  //   }),
+  // );
+  const sessionProvider = app.get(SessionProvider);
+  app.use(sessionProvider.getSessionMiddleware());
 
   //now initialize passport and call its session method to enable it to use sessions
   app.use(passport.initialize());
   app.use(passport.session());
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3500);
 }
 bootstrap();

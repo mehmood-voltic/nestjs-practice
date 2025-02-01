@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { AuthService } from "./auth.service";
+import { AuthService } from "./services/auth.service";
 import { AuthController } from "./controllers/auth.controller";
 import { UsersModule } from "src/users/users.module";
 import { JwtModule } from "@nestjs/jwt";
@@ -10,6 +10,7 @@ import { PasswordService } from "./password.service";
 import { OauthGoogleController } from "./controllers/oauth-google.controller";
 import { GoogleStrategy } from "./strategies/google.strategy";
 import { SessionSerializer } from "./strategies/sesssion.serializer";
+import { SessionProvider } from "./services/session.provider.service";
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { SessionSerializer } from "./strategies/sesssion.serializer";
     PasswordService,
     GoogleStrategy,
     SessionSerializer,
+    SessionProvider,
   ],
   controllers: [AuthController, OauthGoogleController],
   exports: [AuthService],
