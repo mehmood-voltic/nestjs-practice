@@ -1,0 +1,20 @@
+enum TransactionStatus {
+    pending
+    success
+    failed
+}
+
+model Transaction {
+    id         String            @id @default(uuid())
+    senderId   String
+    receiverId String
+    status     TransactionStatus @default(pending)
+    amount     Float
+    //timestamps
+    createdAt  DateTime          @default(now())
+    updatedAt  DateTime          @updatedAt
+
+    //relations
+    sender   User @relation("SendTransactions", fields: [senderId], references: [id], onDelete: Cascade)
+    receiver User @relation("ReceivedTransactions", fields: [receiverId], references: [id], onDelete: Cascade)
+}

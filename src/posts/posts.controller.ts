@@ -20,6 +20,7 @@ export class PostsController {
 
   @Get()
   //   @UseGuards(PassportJwtGuard)
+  @UseGuards(SessionAuthGuard)
   getPosts(@Req() req: AuthRequest) {
     return this.postsService.getPosts(req.user.id);
   }

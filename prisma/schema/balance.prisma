@@ -1,0 +1,12 @@
+model Balance {
+    id      String @id @default(uuid())
+    balance Float  @default(0.00)
+    userId  String @unique
+
+    //timestamps
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    //relations
+    user User @relation(name: "BankBalance", fields: [userId], references: [id], onDelete: Cascade)
+}

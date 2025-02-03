@@ -1,19 +1,29 @@
 enum UserRoles {
-    admin
-    customer
-    agent
+  admin
+  customer
+  agent
+}
+
+enum AuthProviders {
+  local
+  google
 }
 
 model User {
-  id        String   @id @default(uuid())  // Primary key, auto-incrementing
-  email     String   @unique                      // Unique email for each user
-  password  String                                // Hashed password
-  name      String                               // Optional name field
-  role      UserRoles @default(customer)               // Role with default value "admin"
-  createdAt DateTime @default(now())             // Timestamp for when the user was created
-  updatedAt DateTime @updatedAt                  // Timestamp for when the user was last updated
+  id       String        @id @default(uuid()) // Primary key, auto-incrementing
+  email    String        @unique // Unique email for each user
+  password String // Hashed password
+  name     String // Optional name field
+  role     UserRoles     @default(customer) // Role with default value "admin"
+  provider AuthProviders @default(local)
+
+  //Timestamps
+  createdAt DateTime @default(now()) // Timestamp for when the user was created
+  updatedAt DateTime @updatedAt // Timestamp for when the user was last updated
 
   // Relationships (if needed)
-  posts     Post[]                               // One-to-many relationship with Post model (example)
+  posts                Post[] // One-to-many relationship with Post model (example)
+  balance              Balance?      @relation("BankBalance")
+  sentTransactions     Transaction[] @relation("SendTransactions")
+  receivedTransactions Transaction[] @relation("ReceivedTransactions")
 }
-

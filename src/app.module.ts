@@ -6,6 +6,7 @@ import { UsersModule } from "./users/users.module";
 import { PostsModule } from "./posts/posts.module";
 import { OpenaiModule } from "./openai/openai.module";
 import { RedisModule } from "@nestjs-modules/ioredis";
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { RedisModule } from "@nestjs-modules/ioredis";
     PostsModule,
     OpenaiModule,
     RedisModule,
+    PaymentModule,
   ],
 })
 export class AppModule {}
